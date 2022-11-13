@@ -1,20 +1,21 @@
 import { useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
+
 import AppButton from "../component/AppButton"
 import Colors from '../constants/colors';
 
-function LoginScreen() {
+function LoginScreen({ navigation }) {
 
     const [userName, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     function usernameListener(text) {
-        setUsername(text);
+        setUsername(text.trim());
     }
 
     function passwordListener(text) {
-        setPassword(text);
+        setPassword(text.trim());
     }
 
     function invalidateUserName() {
@@ -23,6 +24,14 @@ function LoginScreen() {
 
     function invalidatePassword() {
         setPassword('');
+    }
+
+    function navigate() {
+        invalidatePassword();
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'home' }]
+        });
     }
 
     function onSigninPress() {
@@ -37,7 +46,8 @@ function LoginScreen() {
         } else {
             Alert.alert('Success!',
                 'User have been varified',
-                [{ text: 'Okay', style: 'default', onPress: invalidatePassword }])
+                [{ text: 'Okay', style: 'default', onPress: navigate }])
+
         }
 
     }
@@ -98,7 +108,7 @@ function LoginScreen() {
 
         <Text style={styles.stepperLabel}>Not a member?
             <Text style={[styles.stepperLabel,
-            {color: '#2020d0'}]}> Register now</Text></Text>
+            { color: '#2020d0' }]}> Register now</Text></Text>
 
     </LinearGradient>
 };
