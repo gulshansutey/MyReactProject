@@ -17,7 +17,6 @@ export default function App() {
           <Stack.Screen name="home" component={MainScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-
     </View>
   );
 }

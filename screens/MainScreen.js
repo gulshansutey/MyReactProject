@@ -1,28 +1,58 @@
 import { View, Pressable, StyleSheet, Platform, ToastAndroid, Alert, SafeAreaView, ScrollView, Text } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons';
+import BottomBar from '../component/BottomBar';
+import GroupList from '../component/GroupList';
+import Dialog from 'react-native-dialog';
+import { useState } from 'react';
+
 function MainScreen() {
-    function addNode() {
+
+    const [addGroupDialogVisible, setAddGroupDialogVisible] = useState(false)
+    const [groupTitle, setGroupTitle] = useState('')
+    function addNote() {
         if (Platform.OS === 'android') {
-            ToastAndroid.show("Toast", ToastAndroid.SHORT)
+            ToastAndroid.show("Add note", ToastAndroid.SHORT)
         } else {
-            Alert.alert("Toast")
+            Alert.alert("Add note")
         }
     }
 
+    function addGroup() {
+        setAddGroupDialogVisible(true)
+    }
+
+    function onDialogDismiss() {
+        setAddGroupDialogVisible(false)
+    }
+
+    function onDialogCreate() {
+        setAddGroupDialogVisible(false)
+        Alert.alert(groupTitle)
+        setGroupTitle('');
+    }
+
+    function onDialogInput(text) {
+        setGroupTitle(text);
+    }
+
     return <SafeAreaView style={style.safeArea}>
-
         <View style={style.parent}>
-
-            <View style={style.bottomBar}>
-                <Pressable
-                    style={({ pressed }) => pressed ? [style.iosPressed, style.addButton] : style.addButton}
-                    onPress={addNode}>
-                    {
-                        ({ pressed }) => (<MaterialIcons name="post-add" size={28} color={pressed ? "#e7e7e7" : "#1f55b8"} />)
-                    }
-                </Pressable>
+            <GroupList />
+            <BottomBar onAddNote={addNote} onAddGroup={addGroup} />
+            <View>
+                <Dialog.Container visible={addGroupDialogVisible}>
+                    <Dialog.Title>New Group</Dialog.Title>
+                    <Dialog.Description>
+                        Add a new group for your todos list.
+                    </Dialog.Description>
+                    <Dialog.Input
+                        onChangeText={onDialogInput}
+                        value={groupTitle}
+                        placeholder="Create a group"
+                    />
+                    <Dialog.Button label="Cancel" bold="true" onPress={onDialogDismiss} />
+                    <Dialog.Button label="Create" onPress={onDialogCreate} disabled={groupTitle.length <= 0 ? true : false} />
+                </Dialog.Container>
             </View>
-
         </View>
     </SafeAreaView>
 }
@@ -35,26 +65,6 @@ const style = StyleSheet.create({
     },
     parent: {
         flex: 1,
-    },
-    bottomBar: {
-        bottom: 0,
-        width: "100%",
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        position: 'absolute',
-        borderTopColor: "#d6d6d6",
-        borderTopWidth: 1,
-    },
-    addButton: {
-        elevation: 4,
-        padding: 12,
-        shadowRadius: 4,
-        shadowColor: "black",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3
-    },
-    iosPressed: {
-        opacity: 0.9
     },
 
 });
