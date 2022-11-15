@@ -1,12 +1,13 @@
 
 const Colors = {
-    primaryLight: '#ffffff',
-    primaryDark: '#ffffff',
-    accentLight: '#ffffff',
-    accentDark: '#3232da',
-    gradientStart: '#1f55c3',
-    gradientEnd: '#974df9',
-    textColorLight: '#ffffff',
+    primaryLight: '#00695c',
+    primaryDark: '#003d33',
+    accentLight: '#b9f6ca',
+    accentDark: '#439889',
+    gradientStart: '#003d33',
+    gradientEnd: '#00695c',
+    textColorLight: '#b9f6ca',
+    textColorDark: '#003d33',
 }
 
 export default Colors;
