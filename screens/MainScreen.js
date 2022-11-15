@@ -1,13 +1,18 @@
-import { View, Pressable, StyleSheet, Platform, ToastAndroid, Alert, SafeAreaView, ScrollView, Text } from 'react-native'
+import { View, StyleSheet, Platform, ToastAndroid, Alert, SafeAreaView, ScrollView, Text } from 'react-native'
 import BottomBar from '../component/BottomBar';
 import GroupList from '../component/GroupList';
 import Dialog from 'react-native-dialog';
 import { useState } from 'react';
+import GroupModel from '../models/GroupModel';
+import { DefaultGroup } from '../data/StaticDataSource'
+import Route from '../constants/navigation'
 
-function MainScreen() {
+function MainScreen({ navigation }) {
 
     const [addGroupDialogVisible, setAddGroupDialogVisible] = useState(false)
     const [groupTitle, setGroupTitle] = useState('')
+    const [groups, setGroups] = useState(DefaultGroup)
+
     function addNote() {
         if (Platform.OS === 'android') {
             ToastAndroid.show("Add note", ToastAndroid.SHORT)
@@ -26,7 +31,8 @@ function MainScreen() {
 
     function onDialogCreate() {
         setAddGroupDialogVisible(false)
-        Alert.alert(groupTitle)
+        setGroups(current => [...current, new GroupModel(groups.length, groupTitle, "#133b80", "list")])
+
         setGroupTitle('');
     }
 
@@ -34,9 +40,15 @@ function MainScreen() {
         setGroupTitle(text);
     }
 
+    const onItemClick = (id) => {
+        selectedGroup = groups.find((grp) => grp.id === id)
+        navigation.navigate(Route.GroupDetailScreen, { data: selectedGroup, title : selectedGroup.title})
+    }
+
     return <SafeAreaView style={style.safeArea}>
         <View style={style.parent}>
-            <GroupList />
+
+            <GroupList groups={groups} onItemClick={onItemClick} />
             <BottomBar onAddNote={addNote} onAddGroup={addGroup} />
             <View>
                 <Dialog.Container visible={addGroupDialogVisible}>
