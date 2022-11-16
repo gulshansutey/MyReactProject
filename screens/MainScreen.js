@@ -1,13 +1,32 @@
-import { View, Pressable, StyleSheet, Platform, ToastAndroid, Alert, SafeAreaView, ScrollView, Text } from 'react-native'
+import { View, StyleSheet, Platform, ToastAndroid, Alert, SafeAreaView, ScrollView, Text } from 'react-native'
 import BottomBar from '../component/BottomBar';
 import GroupList from '../component/GroupList';
 import Dialog from 'react-native-dialog';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import GroupModel from '../models/GroupModel';
+import { DefaultGroup } from '../data/StaticDataSource'
+import Route from '../constants/navigation'
+import { insertGroup, fetchGroup } from '../data/Database'
 
-function MainScreen() {
+
+function MainScreen({ navigation }) {
 
     const [addGroupDialogVisible, setAddGroupDialogVisible] = useState(false)
     const [groupTitle, setGroupTitle] = useState('')
+    const [groups, setGroups] = useState([])
+
+    useEffect(() => {
+        async function loadGroups() {
+            const data = await fetchGroup();
+            setGroups(DefaultGroup.concat(data));
+        }
+
+        if (groups !== undefined) {
+            loadGroups()
+        }
+
+    }, []);
+
     function addNote() {
         if (Platform.OS === 'android') {
             ToastAndroid.show("Add note", ToastAndroid.SHORT)
@@ -26,7 +45,9 @@ function MainScreen() {
 
     function onDialogCreate() {
         setAddGroupDialogVisible(false)
-        Alert.alert(groupTitle)
+        const group = new GroupModel(groups.length, groupTitle, "#133b80", "list")
+        insertGroup(group)
+        setGroups(current => [...current, group])
         setGroupTitle('');
     }
 
@@ -34,9 +55,16 @@ function MainScreen() {
         setGroupTitle(text);
     }
 
+    const onItemClick = (id) => {
+        console.log(id);
+        const selectedGroup = groups.find((grp) => grp.id === id)
+        navigation.navigate(Route.GroupDetailScreen, { data: selectedGroup, title: selectedGroup.title })
+    }
+
     return <SafeAreaView style={style.safeArea}>
         <View style={style.parent}>
-            <GroupList />
+
+            <GroupList groups={groups} onItemClick={onItemClick} />
             <BottomBar onAddNote={addNote} onAddGroup={addGroup} />
             <View>
                 <Dialog.Container visible={addGroupDialogVisible}>
