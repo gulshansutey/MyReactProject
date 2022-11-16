@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 
 
 function GroupDetailScreen({ route }) {
-const item = route.params.data
+    const item = route.params.data
     return <View>
 
         <Text>{item.title}</Text>
