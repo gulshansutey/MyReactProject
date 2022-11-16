@@ -7,7 +7,7 @@ const Colors = {
     gradientStart: '#003d33',
     gradientEnd: '#00695c',
     textColorLight: '#b9f6ca',
-    textColorDark: '#003d33',
+    textColorDark: '#003d33', 
 }
 
 export default Colors;

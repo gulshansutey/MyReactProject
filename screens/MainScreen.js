@@ -2,16 +2,30 @@ import { View, StyleSheet, Platform, ToastAndroid, Alert, SafeAreaView, ScrollVi
 import BottomBar from '../component/BottomBar';
 import GroupList from '../component/GroupList';
 import Dialog from 'react-native-dialog';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GroupModel from '../models/GroupModel';
 import { DefaultGroup } from '../data/StaticDataSource'
 import Route from '../constants/navigation'
+import { insertGroup, fetchGroup } from '../data/Database'
+
 
 function MainScreen({ navigation }) {
 
     const [addGroupDialogVisible, setAddGroupDialogVisible] = useState(false)
     const [groupTitle, setGroupTitle] = useState('')
-    const [groups, setGroups] = useState(DefaultGroup)
+    const [groups, setGroups] = useState([])
+
+    useEffect(() => {
+        async function loadGroups() {
+            const data = await fetchGroup();
+            setGroups(DefaultGroup.concat(data));
+        }
+
+        if (groups !== undefined) {
+            loadGroups()
+        }
+
+    }, []);
 
     function addNote() {
         if (Platform.OS === 'android') {
@@ -31,8 +45,9 @@ function MainScreen({ navigation }) {
 
     function onDialogCreate() {
         setAddGroupDialogVisible(false)
-        setGroups(current => [...current, new GroupModel(groups.length, groupTitle, "#133b80", "list")])
-
+        const group = new GroupModel(groups.length, groupTitle, "#133b80", "list")
+        insertGroup(group)
+        setGroups(current => [...current, group])
         setGroupTitle('');
     }
 
@@ -41,8 +56,8 @@ function MainScreen({ navigation }) {
     }
 
     const onItemClick = (id) => {
-        selectedGroup = groups.find((grp) => grp.id === id)
-        navigation.navigate(Route.GroupDetailScreen, { data: selectedGroup, title : selectedGroup.title})
+        const selectedGroup = groups.find((grp) => grp.id === id)
+        navigation.navigate(Route.GroupDetailScreen, { data: selectedGroup, title: selectedGroup.title })
     }
 
     return <SafeAreaView style={style.safeArea}>
