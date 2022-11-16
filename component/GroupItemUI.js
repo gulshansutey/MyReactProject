@@ -4,7 +4,9 @@ import Colors from "../constants/colors";
 function GroupItemUI({ title, color, icon }) {
     console.log(title)
     return <View>
-        <Pressable>
+        <Pressable
+            style={({ pressed }) => pressed ? { backgroundColor: Colors.accentLightRipple } : {}}
+            android_ripple={{ color: Colors.accentLight }}>
             <View style={styles.container}>
                 <Feather style={styles.icon} name={icon} size={24} color={color} />
                 <Text style={styles.text}>{title}</Text>
