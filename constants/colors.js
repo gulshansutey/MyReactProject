@@ -8,6 +8,7 @@ const Colors = {
     gradientEnd: '#00695c',
     textColorLight: '#b9f6ca',
     textColorDark: '#003d33',
+    accentLightRipple: '#dbf5e3',
 }
 
 export default Colors;
