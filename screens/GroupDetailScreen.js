@@ -8,14 +8,16 @@ function GroupDetailScreen({ route }) {
 
     const [todos, setTodods] = useState(TodoTemp)
 
+    
+
     function onItemClick(data) {
             console.log(data);
     }
 
     const item = route.params.data
     return <View style={styles.container}>
+
         <Text style={styles.title}>{item.title}</Text>
-        
         <TodoList todos={todos} onItemClick={onItemClick} />
     </View>
 }
