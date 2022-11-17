@@ -14,9 +14,8 @@ function GroupDetailScreen({ route }) {
 
     const item = route.params.data
     return <View style={styles.container}>
-
         <Text style={styles.title}>{item.title}</Text>
-        <View> </View>
+        
         <TodoList todos={todos} onItemClick={onItemClick} />
     </View>
 }

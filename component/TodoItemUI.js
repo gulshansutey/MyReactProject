@@ -14,7 +14,6 @@ function TodoItemUI({ todo, onPress }) {
     return <View>
         <Pressable onPress={handleItemClick}>
             <View style={styles.container}>
-
                 <Pressable onPress={handleOnComplete}>
                     <MaterialIcons
                         style={styles.icon}
@@ -23,7 +22,7 @@ function TodoItemUI({ todo, onPress }) {
                         color={Colors.primaryDark} />
                 </Pressable>
                 <Text style={styles.text}>{todo.title}</Text>
-                <Pressable onPress={handleOnComplete}>
+                <Pressable onPress={handleOnFavorite}>
                     <MaterialIcons
                         style={styles.icon}
                         name={isFavorite ? "star" : "star-border"}
@@ -32,6 +31,7 @@ function TodoItemUI({ todo, onPress }) {
                 </Pressable>
             </View>
         </Pressable>
+
     </View>
 }
 
@@ -39,14 +39,17 @@ export default TodoItemUI;
 
 const styles = StyleSheet.create({
     text: {
+        flex:1,
         fontSize: 18,
-        padding: 5,
+        justifyContent: 'space-around',
+        alignItems: 'flex-start',
         color: Colors.textColorDark
     },
     container: {
         flex: 1,
         marginTop: 1,
         alignItems: 'center',
+        justifyContent: 'space-between',
         flexDirection: 'row'
     },
     icon: {
