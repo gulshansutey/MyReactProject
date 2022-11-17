@@ -9,6 +9,7 @@ import Route from './constants/navigation'
 import { useCallback, useEffect, useState } from 'react';
 import { init } from './data/Database';
 import * as SplashScreen from "expo-splash-screen";
+import shadeColor from './utils/Utils'
 
 
 const Stack = createNativeStackNavigator();
@@ -50,8 +51,7 @@ export default function App() {
         <Stack.Navigator initialRouteName={Route.HomeScreen} >
           <Stack.Screen name={Route.LoginScreen} component={LoginScreen} />
           <Stack.Screen name={Route.HomeScreen} component={MainScreen} />
-          <Stack.Screen name={Route.GroupDetailScreen} component={GroupDetailScreen}
-            options={({ route, navigation }) => { return { title: route.params.title } }} />
+          <Stack.Screen name={Route.GroupDetailScreen} component={GroupDetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

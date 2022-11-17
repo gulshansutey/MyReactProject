@@ -3,7 +3,7 @@ import Colors from "../constants/colors";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from "react";
 
-function TodoItemUI({ todo, onPress }) {
+function TodoItemUI({ todo, tint, onPress }) {
 
     const [isComplete, setComplete] = useState(todo.isComplete)
     const [isFavorite, setFavorite] = useState(todo.isFavorite)
@@ -13,24 +13,22 @@ function TodoItemUI({ todo, onPress }) {
     const handleOnFavorite = () => { setFavorite(!isFavorite) }
     return <View>
         <Pressable
-            style={({ pressed }) => pressed ? { backgroundColor: Colors.accentLightRipple } : {}}
-            android_ripple={{ color: Colors.accentLight }}
             onPress={handleItemClick}>
             <View style={styles.container}>
                 <Pressable onPress={handleOnComplete}>
                     <MaterialIcons
                         style={styles.icon}
                         name={isComplete ? "check-circle" : "radio-button-unchecked"}
-                        size={24}
-                        color={Colors.primaryDark} />
+                        size={28}
+                        color={tint} />
                 </Pressable>
-                <Text style={styles.text}>{todo.title}</Text>
+                <Text style={[styles.text, { color: tint }]}>{todo.title}</Text>
                 <Pressable onPress={handleOnFavorite}>
                     <MaterialIcons
                         style={styles.icon}
                         name={isFavorite ? "star" : "star-border"}
-                        size={24}
-                        color={Colors.primaryDark} />
+                        size={28}
+                        color={tint} />
                 </Pressable>
             </View>
         </Pressable>
@@ -42,7 +40,7 @@ export default TodoItemUI;
 
 const styles = StyleSheet.create({
     text: {
-        flex:1,
+        flex: 1,
         fontSize: 18,
         justifyContent: 'space-around',
         alignItems: 'flex-start',
@@ -50,12 +48,12 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 20,
+        padding: 10,
         margin: 5,
         backgroundColor: "#fff",
         borderRadius: 10,
-        elevation: 4,
-        shadowRadius: 2,
+        elevation: 1,
+        shadowRadius: 1,
         shadowColor: "black",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
@@ -64,6 +62,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     icon: {
-        padding: 16,
+        padding: 10,
     }
 });
