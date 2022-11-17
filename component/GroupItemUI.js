@@ -13,6 +13,7 @@ function GroupItemUI({ title, color, icon, id, onPress }) {
                 <Feather style={styles.icon} name={icon} size={24} color={color} />
                 <Text style={styles.text}>{title}</Text>
             </View>
+            
         </Pressable>
     </View>
 }

@@ -56,7 +56,6 @@ function MainScreen({ navigation }) {
     }
 
     const onItemClick = (id) => {
-        console.log(id);
         const selectedGroup = groups.find((grp) => grp.id === id)
         navigation.navigate(Route.GroupDetailScreen, { data: selectedGroup, title: selectedGroup.title })
     }
