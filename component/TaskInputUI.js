@@ -1,7 +1,19 @@
 import { View, StyleSheet, Modal, KeyboardAvoidingView, TouchableOpacity, Animated, TextInput } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons';
+import { useState } from 'react'; 
 
-function TaskInputUI({ isVisible, onClose, tint }) {
+function TaskInputUI({ isVisible, onClose, tint, onAddTask }) {
+    const [input, setInput] = useState("")
+    const [desc, setDesc] = useState("")
+
+    function onAddTaskHandle() {
+        onAddTask({
+            title: input,
+            desc : desc,
+            date : new Date().valueOf(),
+        });
+        setInput("");
+    }
 
     return <View>
         <Modal
@@ -31,6 +43,10 @@ function TaskInputUI({ isVisible, onClose, tint }) {
                                 style={styles.addTaskTextInput}
                                 autoFocus={true}
                                 color={tint}
+                                value={input} 
+                                blurOnSubmit={false} 
+                                onSubmitEditing={onAddTaskHandle}
+                                onChangeText={(text) => setInput(text.trim())}
                                 placeholderTextColor="#605d5d"
                                 placeholder="Write a task..." />
                         </View>

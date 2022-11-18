@@ -1,13 +1,15 @@
 import * as SQLite from 'expo-sqlite'
 import GroupModel from '../models/GroupModel';
+import Todo from '../models/TodoModel';
 
 const database = SQLite.openDatabase("mydatabase.db")
 
 export function init() {
     const promise = new Promise((resolve, reject) => {
         database.transaction(
-            (txn) => {
-                txn.executeSql(
+            async (txn) => {
+                var errorMesg = ""
+                await txn.executeSql(
                     `CREATE TABLE IF NOT EXISTS groups (
                 id INTEGER PRIMARY KEY NOT NULL,
                 title TEXT NOT NULL,
@@ -15,28 +17,37 @@ export function init() {
                 color TEXT NOT NULL
             )`,
                     [],
-                    () => {
-                        resolve();
+                    (_, error) => {
+                        errorMesg = error
                     },
-                    (txn, error) => { reject(error); }
+                    (_, error) => {
+                        errorMesg = error
+                        reject(error);
+                    }
                 )
-                txn.executeSql(
+                await txn.executeSql(
                     `CREATE TABLE IF NOT EXISTS todos (
                 id INTEGER PRIMARY KEY NOT NULL,
                 grpId TEXT NOT NULL,
                 title TEXT NOT NULL,
-                desc TEXT NOT NULL,
+                desc TEXT NULL,
                 isComplete INTEGER NOT NULL,
                 isFavorite INTEGER NOT NULL,
-                date INTEGER NOT NULL,
+                date INTEGER NOT NULL
             )`,
                     [],
-                    () => {
-                        resolve();
+                    (_, error) => {
+                        errorMesg = error
                     },
-                    (txn, error) => { reject(error); }
+                    (_, error) => {
+                        errorMesg = error
+                        reject(error);
+                    }
                 )
+
+                resolve();
             }
+
         );
     })
     return promise;
@@ -66,7 +77,28 @@ export function insertGroup(group) {
     });
     return promise;
 }
- 
+
+export function fetchGroup() {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((txn) => {
+            txn.executeSql(`SELECT * FROM groups`,
+                [],
+                (_, result) => {
+                    const groups = []
+                    for (const dp of result.rows._array) {
+                        groups.push(new GroupModel(dp.id, dp.title, dp.color, dp.icon))
+                    }
+                    resolve(groups);
+                },
+                (_, error) => {
+                    reject(error);
+                },
+            )
+        });
+    });
+    return promise;
+}
+
 export function insertTodo(todo) {
     const promise = new Promise((resolve, reject) => {
         database.transaction((txn) => {
@@ -81,12 +113,11 @@ export function insertTodo(todo) {
                     ) 
                     VALUES (?,?,?,?,?,?)
                     `,
-                [group.title, group.icon, group.color],
+                [todo.title, todo.grpId, todo.desc, 0, 0, todo.date],
                 (_, result) => {
                     resolve(result)
                 },
                 (_, error) => {
-                    console.log(error);
                     reject(error)
                 },
             )
@@ -95,17 +126,25 @@ export function insertTodo(todo) {
     return promise;
 }
 
-export function fetchGroup() {
+export function fetchTodos(grpId) {
     const promise = new Promise((resolve, reject) => {
         database.transaction((txn) => {
-            txn.executeSql(`SELECT * FROM groups`,
-                [],
+            txn.executeSql(`SELECT * FROM todos WHERE grpId= ?`,
+                [grpId],
                 (_, result) => {
-                    const groups = []
+                    const todos = []
                     for (const dp of result.rows._array) {
-                        groups.push(new GroupModel(dp.id, dp.title, dp.color, dp.icon))
+                        todos.push(new Todo(
+                            dp.id,
+                            dp.grpId,
+                            dp.title,
+                            dp.desc,
+                            dp.date,
+                            dp.isComplete,
+                            dp.isFavorite
+                        ))
                     }
-                    resolve(groups);
+                    resolve(todos);
                 },
                 (_, error) => {
                     reject(error)

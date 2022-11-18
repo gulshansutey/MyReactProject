@@ -15,6 +15,7 @@ function TodoList({ todos, tint, onItemClick }) {
 
     return <FlatList
         data={todos}
+        contentContainerStyle={{ paddingBottom: 100 }}
         keyExtractor={(item) => item.id}
         renderItem={renderTodoUI}
     />
@@ -23,10 +24,4 @@ function TodoList({ todos, tint, onItemClick }) {
 
 export default TodoList;
 
-const styles = StyleSheet.create({
-    list: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#c0c0c0",
-        borderRadius: 10
-    }
-});
+ 
