@@ -1,12 +1,12 @@
 class Todo {
-    constructor(id, grpId, title, disc, date, isComplete, isFavorite) {
+    constructor(id, grpId, title, desc, date, isComplete, isFavorite) {
         this.id = id;
         this.grpId = grpId;
         this.title = title;
-        this.disc = disc;
+        this.desc = desc;
         this.date = date;
-        this.complete = isComplete;
-        this.favorite = isFavorite;
+        this.isComplete = isComplete;
+        this.isFavorite = isFavorite;
     }
 }
 

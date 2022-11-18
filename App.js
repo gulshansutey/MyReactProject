@@ -14,7 +14,7 @@ import shadeColor from './utils/Utils'
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync().catch(() => {
-  console.log("error");
+  console.log("error-preventAutoHideAsync");
 });
 
 export default function App() {
@@ -23,9 +23,8 @@ export default function App() {
 
   useEffect(() => {
     init().then(() => {
-      new Promise(resolve => setTimeout(resolve, 1000)).then(() => {
-        setIsDbInit(true)
-      });
+      console.log();
+      setIsDbInit(true)
     })
   }, []);
 
