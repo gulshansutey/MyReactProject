@@ -9,6 +9,7 @@ import Route from './constants/navigation'
 import { useCallback, useEffect, useState } from 'react';
 import { init } from './data/Database';
 import * as SplashScreen from "expo-splash-screen";
+import shadeColor from './utils/Utils'
 
 
 const Stack = createNativeStackNavigator();
