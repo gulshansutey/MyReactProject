@@ -1,16 +1,19 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { TodoTemp } from "../data/StaticDataSource"
+import { TaskOptions } from "../data/StaticDataSource"
 import TodoList from "../component/TodoList";
 import AddTaskButton from "../component/AddTaskButton"
 import TaskInputUI from "../component/TaskInputUI"
 import shadeColor from "../utils/Utils"
 import { fetchTodos, insertTodo } from "../data/Database"
 import TodoModel from "../models/TodoModel"
+import TaskOptionModel from "../models/TaskOptionModel"
+import Route from '../constants/navigation'
 
 function GroupDetailScreen({ route, navigation }) {
 
     const [todos, setTodods] = useState()
+    const [taskOptions, setTaskOptions] = useState(TaskOptions)
     const [isAddTaskShowing, setAddTaskShowing] = useState(false)
     const grp = route.params.data
     const bg = shadeColor(0.80, grp.color)
@@ -60,8 +63,21 @@ function GroupDetailScreen({ route, navigation }) {
         loadTodos()
     }
 
+    function onOptionClick(item) {
+        onClose();
+        if (item.id === "1") {
+            navigation.navigate(Route.MapScreen)
+        }
+    }
+
     return <View style={[styles.container, { backgroundColor: bg }]}>
-        <TaskInputUI onClose={onClose} isVisible={isAddTaskShowing} tint={tint} onAddTask={addTask} />
+        <TaskInputUI
+            onClose={onClose}
+            isVisible={isAddTaskShowing}
+            tint={tint}
+            onAddTask={addTask}
+            onAttachClick={onOptionClick}
+            options={taskOptions} />
         <Text style={[styles.title, { color: tint }]}>{grp.title}</Text>
         <TodoList todos={todos} tint={tint} onItemClick={onItemClick} />
         <AddTaskButton color={tint} bg={btnBg} onAddTask={onOpen} />
