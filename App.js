@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/LoginScreen';
 import MainScreen from './screens/MainScreen';
 import GroupDetailScreen from './screens/GroupDetailScreen';
+import LocationPickerScreen from './screens/LocationPickerScreen';
 import Route from './constants/navigation'
 import { useCallback, useEffect, useState } from 'react';
 import { init } from './data/Database';
@@ -51,6 +52,7 @@ export default function App() {
           <Stack.Screen name={Route.LoginScreen} component={LoginScreen} />
           <Stack.Screen name={Route.HomeScreen} component={MainScreen} />
           <Stack.Screen name={Route.GroupDetailScreen} component={GroupDetailScreen} />
+          <Stack.Screen name={Route.MapScreen} component={LocationPickerScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

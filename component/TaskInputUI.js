@@ -1,18 +1,29 @@
-import { View, StyleSheet, Modal, KeyboardAvoidingView, TouchableOpacity, Animated, TextInput } from 'react-native'
+import { View, StyleSheet, Modal, KeyboardAvoidingView, TouchableOpacity, Animated, TextInput, Pressable, FlatList, ScrollView } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react'; 
+import { useState } from 'react';
 
-function TaskInputUI({ isVisible, onClose, tint, onAddTask }) {
+function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, options }) {
     const [input, setInput] = useState("")
     const [desc, setDesc] = useState("")
 
     function onAddTaskHandle() {
         onAddTask({
             title: input,
-            desc : desc,
-            date : new Date().valueOf(),
+            desc: desc,
+            date: new Date().valueOf(),
         });
         setInput("");
+    }
+
+    function renderItem(i) {
+        const item = i.item;
+        return <Pressable onPress={() => { onAttachClick(item) }}>
+            <MaterialIcons
+                style={styles.icon}
+                name={item.icon}
+                size={24}
+                color={tint} />
+        </Pressable>
     }
 
     return <View>
@@ -39,42 +50,28 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask }) {
                                 name="radio-button-unchecked"
                                 size={28}
                                 color={tint} />
+
                             <TextInput
                                 style={styles.addTaskTextInput}
                                 autoFocus={true}
                                 color={tint}
-                                value={input} 
-                                blurOnSubmit={false} 
+                                value={input}
+                                blurOnSubmit={false}
                                 onSubmitEditing={onAddTaskHandle}
                                 onChangeText={(text) => setInput(text.trim())}
                                 placeholderTextColor="#605d5d"
                                 placeholder="Write a task..." />
+
                         </View>
                         <View style={styles.actionButtons}>
-
-                            <MaterialIcons
-                                style={styles.icon}
-                                name="map"
-                                size={24}
-                                color={tint} />
-                            <MaterialIcons
-                                style={styles.icon}
-                                name="event"
-                                size={24}
-                                color={tint} />
-                            <MaterialIcons
-                                style={styles.icon}
-                                name="add-alarm"
-                                size={24}
-                                color={tint} />
-                            <MaterialIcons
-                                style={styles.icon}
-                                name="note"
-                                size={24}
-                                color={tint} />
+                            <FlatList data={options}
+                                keyboardShouldPersistTaps='always'
+                                horizontal={true}
+                                keyExtractor={(item) => item.id}
+                                renderItem={renderItem}
+                            />
                         </View>
                     </View>
-
 
                 </Animated.View>
             </KeyboardAvoidingView>
