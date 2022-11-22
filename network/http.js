@@ -17,25 +17,52 @@ export async function getVenues(latLng) {
     const searchParams = new URLSearchParams({
         query: 'food',
         ll: latLng,
-        sort: 'DISTANCE'
-
+        sort: 'DISTANCE',
+        open_now: "true"
     });
 
-    const url = BASE_URL + "/v3/places/search?" +
-        REQUEST_COMMON_PARAMS + "&limit=" +
-        VENUES + "&categoryId=" +
-        FOOD_CATEGORY + "&radius=" + RADIUS
     const placeUrl = `https://api.foursquare.com/v3/places/search?${searchParams}`
-    return axios.get(placeUrl, {
+
+    const response = await axios.get(placeUrl, {
         headers: {
             Accept: 'application/json',
             Authorization: ACCESS_TOKEN,
         }
     }).catch((error) => {
+        console.log("Error--" + placeUrl);
         console.log(error);
     });
+
+    const results = response.data.results
+    const places = [];
+
+    for (const i in results) {
+        const data = results[i];
+        const picRes = await getPictureForVenue(data.fsq_id);
+        places.push({
+            title: data.name,
+            location: data.location,
+            image: data.categories[0].icon,
+            picture: picRes.data[0]
+        });
+    }
+   
+    return places;
 }
 
-export function getPictureForVenue(id) {
-    const url = BASE_URL + "/v2/venues/{id}/photos?$REQUEST_COMMON_PARAMS&limit=$PICTURE_LIMIT"
+export async function getPictureForVenue(fsq_id) {
+    const params = new URLSearchParams({
+        limit: "1"
+    });
+    const photoUrl = `https://api.foursquare.com/v3/places/${fsq_id}/photos?${params}`
+    const response = await axios.get(photoUrl, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: ACCESS_TOKEN,
+        }
+    }).catch((error) => {
+        console.log("Error--" + placeUrl);
+        console.log(error);
+    });
+    return response;
 }
