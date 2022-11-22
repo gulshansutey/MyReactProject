@@ -1,9 +1,10 @@
-import { View, Alert, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Alert, StyleSheet, ActivityIndicator, Text } from "react-native";
 import { getCurrentPositionAsync, PermissionStatus, requestForegroundPermissionsAsync } from 'expo-location'
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useEffect, useState } from "react";
 import Colors from '../constants/colors';
 import { getVenues } from '../network/http'
+import PlacesList from '../component/PlacesList';
 
 function LocationPickerScreen() {
 
@@ -13,25 +14,13 @@ function LocationPickerScreen() {
 
     useEffect(() => {
         (async () => {
-            console.log("1");
             const status = await requestForegroundPermissionsAsync();
-            console.log("2");
             if (status.status === "granted") {
-                console.log("3");
                 const loc = await getCurrentPositionAsync();
-                console.log("4");
-                console.log(loc.coords.longitude);
-                console.log("5");
-                setLocation({ lat: loc.coords.latitude, lng: loc.coords.longitude });
-                console.log("6");
+                const lat = loc.coords.latitude;
+                const lng = loc.coords.longitude;
+                setLocation({ lat: lat, lng: lng });
                 setLoaded(false);
-                await getVenues(location.lat + "," + location.lng).then((response) => {
-                    setPlaces(response.data.results)
-                    console.log(response.data.results);
-                }).catch((error) => {
-                    console.log("Error -- " + error);
-                })
-
             }
             if (status === PermissionStatus.DENIED) {
                 Alert.alert('Insufficent Permissions!',
@@ -41,6 +30,19 @@ function LocationPickerScreen() {
             }
         })();
     }, [])
+
+    useEffect(() => {
+        (async () => {
+            if (!isLoading) {
+                const response = await getVenues(location.lat.toString() + "," + location.lng.toString())
+                setPlaces(response);
+            }
+        })().catch(
+            (error) => {
+                console.log(error);
+            }
+        );
+    }, [location, isLoading]);
 
     function onMapTouch(event) {
         const lat = event.nativeEvent.coordinate.latitude;
@@ -52,36 +54,53 @@ function LocationPickerScreen() {
         <ActivityIndicator color={Colors.primaryDark} />
     </View>
 
-    return <MapView
-        style={styles.map}
-        onPress={onMapTouch}
-        provider={PROVIDER_GOOGLE}
-        showsScale={true}
-        showsCompass={true}
-        initialCamera={{
-            center: {
+    return <View style={styles.matchParent}>
+
+        
+
+        <MapView
+            style={styles.matchParent}
+            onPress={onMapTouch}
+            provider={PROVIDER_GOOGLE}
+            showsScale={true}
+            showsCompass={true}
+            initialCamera={{
+                center: {
+                    latitude: location.lat,
+                    longitude: location.lng,
+                },
+                heading: 0,
+                altitude: 10,
+                pitch: 0,
+                zoom: 16,
+            }}
+        >
+            {location && <Marker coordinate={{
                 latitude: location.lat,
-                longitude: location.lng,
-            },
-            heading: 0,
-            altitude: 10,
-            pitch: 0,
-            zoom: 16,
-        }}
-    >
-        {location && <Marker coordinate={{
-            latitude: location.lat,
-            longitude: location.lng
-        }}
-        />}
-    </MapView >;
+                longitude: location.lng
+            }}
+            />}
+        </MapView >
+
+        {
+            places && <PlacesList style={styles.bottomList} data={places} />
+        }
+    </View>
+
+
 }
+
 
 export default LocationPickerScreen;
 
 const styles = StyleSheet.create({
-    map: {
+    matchParent: {
         flex: 1
+    },
+    bottomList: {
+        position: 'absolute',
+        bottom: 30,
+        width:"100%",
     },
     loader: {
         flex: 1,

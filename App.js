@@ -24,7 +24,6 @@ export default function App() {
 
   useEffect(() => {
     init().then(() => {
-      console.log();
       setIsDbInit(true)
     })
   }, []);
@@ -48,7 +47,7 @@ export default function App() {
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <StatusBar />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={Route.HomeScreen} >
+        <Stack.Navigator initialRouteName={Route.MapScreen} >
           <Stack.Screen name={Route.LoginScreen} component={LoginScreen} />
           <Stack.Screen name={Route.HomeScreen} component={MainScreen} />
           <Stack.Screen name={Route.GroupDetailScreen} component={GroupDetailScreen} />
