@@ -43,7 +43,8 @@ export async function getVenues(latLng) {
             title: data.name,
             location: data.location,
             image: data.categories[0].icon,
-            picture: picRes.data[0]
+            picture: picRes.data[0],
+            coords: data.geocodes.main
         });
     }
    

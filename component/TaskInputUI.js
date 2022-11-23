@@ -1,10 +1,14 @@
-import { View, StyleSheet, Modal, KeyboardAvoidingView, TouchableOpacity, Animated, TextInput, Pressable, FlatList, ScrollView } from 'react-native'
+import { View, StyleSheet, Modal, Text, KeyboardAvoidingView, TouchableOpacity, Animated, TextInput, Pressable, FlatList } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { TaskOptionsContext } from '../context/task-options-context';
 
 function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, options }) {
+
+    const taskCtx = useContext(TaskOptionsContext);
     const [input, setInput] = useState("")
     const [desc, setDesc] = useState("")
+
 
     function onAddTaskHandle() {
         onAddTask({
@@ -18,11 +22,19 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, optio
     function renderItem(i) {
         const item = i.item;
         return <Pressable onPress={() => { onAttachClick(item) }}>
-            <MaterialIcons
-                style={styles.icon}
-                name={item.icon}
-                size={24}
-                color={tint} />
+            <View style={styles.optionContainer}>
+                <MaterialIcons
+                    style={styles.icon}
+                    name={item.icon}
+                    size={24}
+                    color={tint} />
+
+                {
+                    item.title && <Text>{item.title}</Text>
+                }
+            </View>
+
+
         </Pressable>
     }
 
@@ -83,6 +95,10 @@ export default TaskInputUI;
 
 
 const styles = StyleSheet.create({
+
+    optionContainer: {
+        flexDirection: 'row'
+    },
 
     inputContainer: {
         flexDirection: "row",

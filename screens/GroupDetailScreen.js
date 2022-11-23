@@ -1,6 +1,5 @@
-import { useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TaskOptions } from "../data/StaticDataSource"
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { View, Text, StyleSheet, AppState } from "react-native";
 import TodoList from "../component/TodoList";
 import AddTaskButton from "../component/AddTaskButton"
 import TaskInputUI from "../component/TaskInputUI"
@@ -9,11 +8,14 @@ import { fetchTodos, insertTodo } from "../data/Database"
 import TodoModel from "../models/TodoModel"
 import TaskOptionModel from "../models/TaskOptionModel"
 import Route from '../constants/navigation'
+import { TaskOptionsContext } from "../context/task-options-context";
 
 function GroupDetailScreen({ route, navigation }) {
 
+    const taskCtx = useContext(TaskOptionsContext);
+ 
     const [todos, setTodods] = useState()
-    const [taskOptions, setTaskOptions] = useState(TaskOptions)
+    const [appState, setAppState] = useState(AppState.currentState)
     const [isAddTaskShowing, setAddTaskShowing] = useState(false)
     const grp = route.params.data
     const bg = shadeColor(0.80, grp.color)
@@ -24,6 +26,14 @@ function GroupDetailScreen({ route, navigation }) {
         const data = await fetchTodos(grp.id);
         setTodods(data.reverse());
     }
+
+    useEffect(() => {
+        // return function cleanup() {
+        //     // if (taskCtx.hasState) {
+        //     //     //setAddTaskShowing(true);
+        //     // }
+        // };
+    });
 
     useEffect(() => {
         loadTodos();
@@ -39,7 +49,9 @@ function GroupDetailScreen({ route, navigation }) {
         });
     }, [navigation]);
 
+
     function onItemClick(data) {
+        
     }
 
     function onOpen() {
@@ -47,6 +59,7 @@ function GroupDetailScreen({ route, navigation }) {
     }
 
     function onClose() {
+        //taskCtx.reset();
         setAddTaskShowing(false)
     }
 
@@ -64,9 +77,13 @@ function GroupDetailScreen({ route, navigation }) {
     }
 
     function onOptionClick(item) {
-        onClose();
-        if (item.id === "1") {
-            navigation.navigate(Route.MapScreen)
+        console.log(item.id);
+       
+        switch (item.id) {
+            case "1": navigation.navigate(Route.MapScreen)
+            case "2": navigation.navigate(Route.AddNote)
+            case "3": navigation.navigate(Route.AddNote)
+            case "4": navigation.navigate(Route.AddNote)
         }
     }
 
@@ -77,7 +94,7 @@ function GroupDetailScreen({ route, navigation }) {
             tint={tint}
             onAddTask={addTask}
             onAttachClick={onOptionClick}
-            options={taskOptions} />
+            options={taskCtx.options} />
         <Text style={[styles.title, { color: tint }]}>{grp.title}</Text>
         <TodoList todos={todos} tint={tint} onItemClick={onItemClick} />
         <AddTaskButton color={tint} bg={btnBg} onAddTask={onOpen} />

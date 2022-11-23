@@ -1,16 +1,18 @@
-import { View, Alert, StyleSheet, ActivityIndicator, Text } from "react-native";
+import { View, Alert, StyleSheet, ActivityIndicator, Animated } from "react-native";
 import { getCurrentPositionAsync, PermissionStatus, requestForegroundPermissionsAsync } from 'expo-location'
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Colors from '../constants/colors';
 import { getVenues } from '../network/http'
 import PlacesList from '../component/PlacesList';
+import { TaskOptionsContext } from "../context/task-options-context";
 
 function LocationPickerScreen() {
-
     const [location, setLocation] = useState();
+    const [marker, setMarker] = useState();
     const [isLoading, setLoaded] = useState(true);
     const [places, setPlaces] = useState();
+    const mapRef = useRef(null)
 
     useEffect(() => {
         (async () => {
@@ -44,6 +46,19 @@ function LocationPickerScreen() {
         );
     }, [location, isLoading]);
 
+    useEffect(() => {
+
+        if (mapRef.current) {
+            mapRef.current.animateCamera({
+                center: {
+                    latitude: (marker === undefined) ? location.lat : marker.lat,
+                    longitude: (marker === undefined) ? location.lng : marker.lng,
+                },
+                duration: 3000
+            })
+        }
+    }, [marker])
+
     function onMapTouch(event) {
         const lat = event.nativeEvent.coordinate.latitude;
         const lng = event.nativeEvent.coordinate.longitude;
@@ -54,16 +69,21 @@ function LocationPickerScreen() {
         <ActivityIndicator color={Colors.primaryDark} />
     </View>
 
+    function onItemSnap(data) {
+        const coords = data.item.coords
+        setMarker({ lat: coords.latitude, lng: coords.longitude })
+    }
+
     return <View style={styles.matchParent}>
 
-        
-
         <MapView
+            ref={mapRef}
             style={styles.matchParent}
             onPress={onMapTouch}
             provider={PROVIDER_GOOGLE}
             showsScale={true}
             showsCompass={true}
+
             initialCamera={{
                 center: {
                     latitude: location.lat,
@@ -75,15 +95,15 @@ function LocationPickerScreen() {
                 zoom: 16,
             }}
         >
-            {location && <Marker coordinate={{
-                latitude: location.lat,
-                longitude: location.lng
+            {marker && <Marker coordinate={{
+                latitude: marker.lat,
+                longitude: marker.lng
             }}
             />}
         </MapView >
 
         {
-            places && <PlacesList style={styles.bottomList} data={places} />
+            places && <PlacesList style={styles.bottomList} data={places} onItemSnap={onItemSnap} />
         }
     </View>
 
@@ -100,7 +120,7 @@ const styles = StyleSheet.create({
     bottomList: {
         position: 'absolute',
         bottom: 30,
-        width:"100%",
+        width: "100%",
     },
     loader: {
         flex: 1,

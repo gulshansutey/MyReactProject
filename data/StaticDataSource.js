@@ -17,8 +17,8 @@ export const TodoTemp = [
 
 import TaskOptionModel from "../models/TaskOptionModel"
 export const TaskOptions = [
-    new TaskOptionModel("1", "", "map", false),
-    new TaskOptionModel("2", "", "event", false),
-    new TaskOptionModel("3", "", "add-alarm", false),
-    new TaskOptionModel("4", "", "note", false),
+    new TaskOptionModel("1", "", "map", false, {}, ""),
+    new TaskOptionModel("2", "", "event", false, {}, ""),
+    new TaskOptionModel("3", "", "add-alarm", false, {}, ""),
+    new TaskOptionModel("4", "", "note", false, {}, ""),
 ]

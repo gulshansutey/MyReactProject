@@ -1,27 +1,39 @@
-import { View, StyleSheet, Image, Text } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useContext, useEffect } from "react";
+import { View, StyleSheet, Image, Text, Pressable } from "react-native";
+import { TaskOptionsContext } from "../context/task-options-context";
 
 function PlaceItemUI({ data }) {
+    const navigation = useNavigation()
+    const taskCtx = useContext(TaskOptionsContext)
     const img = data.image.prefix + "120" + data.image.suffix
     const pic = data.picture.prefix + "1200x800" + data.picture.suffix
 
+    function select() {
+        taskCtx.update("1", data, data.title);
+        navigation.goBack();
+    }
+
     return <View style={styles.shadow}>
-        <View style={styles.container}>
+        <Pressable onPress={select}>
+            <View style={styles.container}>
 
-            <Image
-                style={styles.banner}
-                source={{ uri: pic }}
-            />
-            <Image
-                style={styles.icon}
-                source={{ uri: img }}
-            />
-            <Text
-                numberOfLines={1}
-                ellipsizeMode='tail'
-                style={styles.title}>{data.title}</Text>
+                <Image
+                    style={styles.banner}
+                    source={{ uri: pic }}
+                />
+                <Image
+                    style={styles.icon}
+                    source={{ uri: img }}
+                />
+                <Text
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                    style={styles.title}>{data.title}</Text>
 
-
-        </View></View>
+            </View>
+        </Pressable>
+    </View>
 }
 
 export default PlaceItemUI;
