@@ -10,8 +10,9 @@ import Route from './constants/navigation'
 import { useCallback, useEffect, useState } from 'react';
 import { init } from './data/Database';
 import * as SplashScreen from "expo-splash-screen";
-import shadeColor from './utils/Utils'
-
+import shadeColor from './utils/Utils' 
+import TaskOptionsContextProvider from './context/task-options-context';
+import AddNoteScreen from './screens/AddNoteScreen';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -46,14 +47,26 @@ export default function App() {
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <StatusBar />
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName={Route.MapScreen} >
-          <Stack.Screen name={Route.LoginScreen} component={LoginScreen} />
-          <Stack.Screen name={Route.HomeScreen} component={MainScreen} />
-          <Stack.Screen name={Route.GroupDetailScreen} component={GroupDetailScreen} />
-          <Stack.Screen name={Route.MapScreen} component={LocationPickerScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <TaskOptionsContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={Route.HomeScreen} >
+            <Stack.Screen name={Route.LoginScreen} component={LoginScreen} />
+            <Stack.Screen name={Route.HomeScreen} component={MainScreen} />
+            <Stack.Screen name={Route.GroupDetailScreen} component={GroupDetailScreen} />
+            <Stack.Screen name={Route.AddNote} component={AddNoteScreen} options={
+              {
+                presentation: 'modal'
+              }
+            } />
+            <Stack.Screen name={Route.MapScreen} component={LocationPickerScreen} options={
+              {
+                presentation: 'modal',
+                title: "Add Location"
+              }
+            } />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TaskOptionsContextProvider>
     </View>
   );
 }
