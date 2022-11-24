@@ -1,26 +1,55 @@
 import { View, StyleSheet, Modal, Text, KeyboardAvoidingView, TouchableOpacity, Animated, TextInput, Pressable, FlatList } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { useContext, useState } from 'react';
 import { TaskOptionsContext } from '../context/task-options-context';
+import Todo from '../models/TodoModel';
 
 function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, options }) {
 
-    const taskCtx = useContext(TaskOptionsContext);
+    const optionsCtx = useContext(TaskOptionsContext);
     const [input, setInput] = useState("")
-    const [desc, setDesc] = useState("")
 
-
-    function onAddTaskHandle() {
-        onAddTask({
-            title: input,
-            desc: desc,
-            date: new Date().valueOf(),
-        });
+    function onAddTaskHandle() { 
+        onAddTask(new Todo(
+            "",
+            "",
+            input,
+            optionsCtx.note,
+            new Date().valueOf(),
+            false,
+            false,
+            optionsCtx.location
+        ));
         setInput("");
+    }
+
+    function onCloseListner() {
+        setInput("")
+        onClose()
     }
 
     function renderItem(i) {
         const item = i.item;
+        if (item.title) {
+            return <View style={[styles.activeOption, { backgroundColor: tint }]} >
+                <MaterialIcons
+                    style={styles.icon}
+                    name={item.icon}
+                    size={24}
+                    color="#ffffff" />
+                <Text style={styles.activeOptionText}>{item.title}</Text>
+                <Pressable onPress={() => { optionsCtx.clear(item.id) }}>
+                    <AntDesign
+                        style={styles.icon}
+                        name="closecircle"
+                        size={18}
+                        color="#ffffff" />
+                </Pressable>
+            </View >
+
+        }
+
+
         return <Pressable onPress={() => { onAttachClick(item) }}>
             <View style={styles.optionContainer}>
                 <MaterialIcons
@@ -28,13 +57,7 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, optio
                     name={item.icon}
                     size={24}
                     color={tint} />
-
-                {
-                    item.title && <Text>{item.title}</Text>
-                }
             </View>
-
-
         </Pressable>
     }
 
@@ -42,7 +65,7 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, optio
         <Modal
             visible={isVisible}
             transparent={true}
-            onRequestClose={onClose}
+            onRequestClose={onCloseListner}
         >
             <KeyboardAvoidingView
                 enabled={true}
@@ -52,7 +75,7 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, optio
                 <TouchableOpacity
                     style={styles.mask}
                     activeOpacity={1}
-                    onPress={onClose}
+                    onPress={onCloseListner}
                 />
                 <Animated.View style={styles.container}>
                     <View>
@@ -70,7 +93,7 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, optio
                                 value={input}
                                 blurOnSubmit={false}
                                 onSubmitEditing={onAddTaskHandle}
-                                onChangeText={(text) => setInput(text.trim())}
+                                onChangeText={(text) => setInput(text)}
                                 placeholderTextColor="#605d5d"
                                 placeholder="Write a task..." />
 
@@ -79,6 +102,7 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, optio
                             <FlatList data={options}
                                 keyboardShouldPersistTaps='always'
                                 horizontal={true}
+                                showsHorizontalScrollIndicator={false}
                                 keyExtractor={(item) => item.id}
                                 renderItem={renderItem}
                             />
@@ -95,6 +119,24 @@ export default TaskInputUI;
 
 
 const styles = StyleSheet.create({
+    activeOption: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 8,
+        marginHorizontal: 8,
+        borderRadius: 50,
+    },
+    activeOptionText: {
+        fontSize: 16,
+        padding: 4,
+        color: "#ffffff",
+    },
+    optionContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignContent: 'center'
+    },
 
     optionContainer: {
         flexDirection: 'row'

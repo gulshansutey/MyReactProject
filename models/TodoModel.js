@@ -1,5 +1,5 @@
 class Todo {
-    constructor(id, grpId, title, desc, date, isComplete, isFavorite) {
+    constructor(id, grpId, title, desc, date, isComplete, isFavorite, location ) {
         this.id = id;
         this.grpId = grpId;
         this.title = title;
@@ -7,6 +7,7 @@ class Todo {
         this.date = date;
         this.isComplete = isComplete;
         this.isFavorite = isFavorite;
+        this.location = location;
     }
 }
 

@@ -2,18 +2,20 @@ import { View, StyleSheet, Platform, ToastAndroid, Alert, SafeAreaView, ScrollVi
 import BottomBar from '../component/BottomBar';
 import GroupList from '../component/GroupList';
 import Dialog from 'react-native-dialog';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import GroupModel from '../models/GroupModel';
 import { DefaultGroup } from '../data/StaticDataSource'
 import Route from '../constants/navigation'
 import { insertGroup, fetchGroup } from '../data/Database'
-
-
+import { TaskOptionsContext } from '../context/task-options-context';
+import { useFocusEffect } from "@react-navigation/native";
+import { clearDatabase } from "../data/Database"
 function MainScreen({ navigation }) {
 
     const [addGroupDialogVisible, setAddGroupDialogVisible] = useState(false)
     const [groupTitle, setGroupTitle] = useState('')
     const [groups, setGroups] = useState([])
+    const optionCtx = useContext(TaskOptionsContext);
 
     useEffect(() => {
         async function loadGroups() {
@@ -26,8 +28,19 @@ function MainScreen({ navigation }) {
         }
 
     }, []);
+    useFocusEffect(
+        useCallback(() => {
+            if (optionCtx.hasState) {
+                optionCtx.reset();
+            }
+            return () => {
+                //unfocused
+            };
+        }, [])
+    );
 
     function addNote() {
+        clearDatabase();
         if (Platform.OS === 'android') {
             ToastAndroid.show("Add note", ToastAndroid.SHORT)
         } else {
