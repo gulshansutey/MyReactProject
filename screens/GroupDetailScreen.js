@@ -26,14 +26,6 @@ function GroupDetailScreen({ route, navigation }) {
     }
 
     useEffect(() => {
-        // return function cleanup() {
-        //     // if (taskCtx.hasState) {
-        //     //     //setAddTaskShowing(true);
-        //     // }
-        // };
-    });
-
-    useEffect(() => {
         loadTodos();
     }, [])
 
