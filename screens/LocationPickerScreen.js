@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import Colors from '../constants/colors';
 import { getVenues } from '../network/http'
 import PlacesList from '../component/PlacesList';
+import { TaskOptionsContext } from "../context/task-options-context";
 
 function LocationPickerScreen() {
-
     const [location, setLocation] = useState();
     const [marker, setMarker] = useState();
     const [isLoading, setLoaded] = useState(true);

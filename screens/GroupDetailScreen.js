@@ -26,6 +26,14 @@ function GroupDetailScreen({ route, navigation }) {
     }
 
     useEffect(() => {
+        // return function cleanup() {
+        //     // if (taskCtx.hasState) {
+        //     //     //setAddTaskShowing(true);
+        //     // }
+        // };
+    });
+
+    useEffect(() => {
         loadTodos();
     }, [])
 
@@ -49,6 +57,7 @@ function GroupDetailScreen({ route, navigation }) {
             headerTintColor: tint,
         });
     });
+
 
     function onItemClick(data) {
         navigation.navigate(

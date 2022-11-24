@@ -138,6 +138,10 @@ const styles = StyleSheet.create({
         alignContent: 'center'
     },
 
+    optionContainer: {
+        flexDirection: 'row'
+    },
+
     inputContainer: {
         flexDirection: "row",
         alignItems: "center",
