@@ -23,6 +23,7 @@ export function init() {
                     (_, error) => {
                         errorMesg = error
                         reject(error);
+                        console.log(error);
                     }
                 )
                 await txn.executeSql(
@@ -33,7 +34,8 @@ export function init() {
                 desc TEXT NULL,
                 isComplete INTEGER NOT NULL,
                 isFavorite INTEGER NOT NULL,
-                date INTEGER NOT NULL
+                date INTEGER NOT NULL,
+                location TEXT NULL
             )`,
                     [],
                     (_, error) => {
@@ -42,6 +44,7 @@ export function init() {
                     (_, error) => {
                         errorMesg = error
                         reject(error);
+                        console.log(error);
                     }
                 )
 
@@ -92,6 +95,7 @@ export function fetchGroup() {
                 },
                 (_, error) => {
                     reject(error);
+                    console.log(error);
                 },
             )
         });
@@ -109,16 +113,18 @@ export function insertTodo(todo) {
                     desc,
                     isComplete,
                     isFavorite,
-                    date
+                    date,
+                    location
                     ) 
-                    VALUES (?,?,?,?,?,?)
+                    VALUES (?,?,?,?,?,?,?)
                     `,
-                [todo.title, todo.grpId, todo.desc, 0, 0, todo.date],
+                [todo.title, todo.grpId, todo.desc, 0, 0, todo.date, JSON.stringify(todo.location)],
                 (_, result) => {
                     resolve(result)
                 },
                 (_, error) => {
                     reject(error)
+                    console.log('Insert todo error - '+ error);
                 },
             )
         });
@@ -141,7 +147,8 @@ export function fetchTodos(grpId) {
                             dp.desc,
                             dp.date,
                             dp.isComplete,
-                            dp.isFavorite
+                            dp.isFavorite,
+                            dp.location
                         ))
                     }
                     resolve(todos);
@@ -154,4 +161,11 @@ export function fetchTodos(grpId) {
         });
     });
     return promise;
+}
+
+export function clearDatabase() {
+    console.log("CLear");
+    database.closeAsync();
+    database.deleteAsync();
+    init();
 }

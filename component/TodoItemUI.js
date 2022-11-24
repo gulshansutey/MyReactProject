@@ -8,7 +8,7 @@ function TodoItemUI({ todo, tint, onPress }) {
     const [isComplete, setComplete] = useState(todo.isComplete)
     const [isFavorite, setFavorite] = useState(todo.isFavorite)
 
-    const handleItemClick = () => { onPress(todo.id) }
+    const handleItemClick = () => { onPress(todo) }
     const handleOnComplete = () => { setComplete(!isComplete) }
     const handleOnFavorite = () => { setFavorite(!isFavorite) }
     return <View>

@@ -3,7 +3,8 @@ const Route = {
     HomeScreen: "Home",
     GroupDetailScreen: "GroupDetailScreen",
     MapScreen: "MapScreen",
-    AddNote: "AddNote"
+    AddNote: "AddNote",
+    TaskDetailScreen: "TaskDetails"
 }
 
 export default Route;

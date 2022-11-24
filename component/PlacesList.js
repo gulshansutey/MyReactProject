@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { FlatList, StyleSheet, View, Dimensions } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import PlaceItemUI from "../component/PlaceItemUI";
 
 function renderUI(item) {

@@ -1,22 +1,20 @@
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { View, Text, StyleSheet, AppState } from "react-native";
 import TodoList from "../component/TodoList";
 import AddTaskButton from "../component/AddTaskButton"
 import TaskInputUI from "../component/TaskInputUI"
 import shadeColor from "../utils/Utils"
 import { fetchTodos, insertTodo } from "../data/Database"
-import TodoModel from "../models/TodoModel"
-import TaskOptionModel from "../models/TaskOptionModel"
 import Route from '../constants/navigation'
 import { TaskOptionsContext } from "../context/task-options-context";
+import { useFocusEffect } from "@react-navigation/native";
 
 function GroupDetailScreen({ route, navigation }) {
 
-    const taskCtx = useContext(TaskOptionsContext);
- 
+    const optionCtx = useContext(TaskOptionsContext);
+
     const [todos, setTodods] = useState()
-    const [appState, setAppState] = useState(AppState.currentState)
-    const [isAddTaskShowing, setAddTaskShowing] = useState(false)
+    const [addTaskShowing, setAddTaskShowing] = useState(false)
     const grp = route.params.data
     const bg = shadeColor(0.80, grp.color)
     const btnBg = shadeColor(0.70, grp.color, "#ffffff")
@@ -28,16 +26,19 @@ function GroupDetailScreen({ route, navigation }) {
     }
 
     useEffect(() => {
-        // return function cleanup() {
-        //     // if (taskCtx.hasState) {
-        //     //     //setAddTaskShowing(true);
-        //     // }
-        // };
-    });
-
-    useEffect(() => {
         loadTodos();
     }, [])
+
+    useFocusEffect(
+        useCallback(() => { 
+            if (optionCtx.hasState) {
+                setAddTaskShowing(true);
+            }
+            return () => {
+                //no-op
+            };
+        }, [optionCtx.hasState])
+    );
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -47,54 +48,53 @@ function GroupDetailScreen({ route, navigation }) {
             },
             headerTintColor: tint,
         });
-    }, [navigation]);
-
+    });
 
     function onItemClick(data) {
-        
+        navigation.navigate(
+            Route.TaskDetailScreen,
+            { bg: bg, btnBg: btnBg, tint: tint, data: data }
+        )
     }
 
-    function onOpen() {
-        setAddTaskShowing(true)
+    function onOpen() { 
+        setAddTaskShowing(true);
     }
 
     function onClose() {
-        //taskCtx.reset();
-        setAddTaskShowing(false)
+        console.log("kjhgfdsfghj");
+        optionCtx.reset()
+        setAddTaskShowing(false);
     }
 
-    function addTask(todo) {
-        insertTodo(new TodoModel(
-            0,
-            grp.id,
-            todo.title,
-            todo.desc,
-            todo.date,
-            false,
-            false
-        ))
+    function addTask(todo) { 
+        todo.grpId = grp.id
+        setAddTaskShowing(false);
+        insertTodo(todo)
         loadTodos()
     }
 
     function onOptionClick(item) {
-        console.log(item.id);
-       
-        switch (item.id) {
-            case "1": navigation.navigate(Route.MapScreen)
-            case "2": navigation.navigate(Route.AddNote)
-            case "3": navigation.navigate(Route.AddNote)
-            case "4": navigation.navigate(Route.AddNote)
+        if (item.id === "1") {
+            navigation.navigate(Route.MapScreen);
+        } else if (item.id === "4") {
+            navigation.navigate(Route.AddNote);
+        } else {
+            console.log("Unknown option");
+            return;
         }
+        optionCtx.setState(true);
+        setAddTaskShowing(false);
     }
 
     return <View style={[styles.container, { backgroundColor: bg }]}>
         <TaskInputUI
             onClose={onClose}
-            isVisible={isAddTaskShowing}
+            isVisible={addTaskShowing}
             tint={tint}
             onAddTask={addTask}
             onAttachClick={onOptionClick}
-            options={taskCtx.options} />
+            options={optionCtx.options} />
         <Text style={[styles.title, { color: tint }]}>{grp.title}</Text>
         <TodoList todos={todos} tint={tint} onItemClick={onItemClick} />
         <AddTaskButton color={tint} bg={btnBg} onAddTask={onOpen} />

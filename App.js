@@ -9,10 +9,10 @@ import LocationPickerScreen from './screens/LocationPickerScreen';
 import Route from './constants/navigation'
 import { useCallback, useEffect, useState } from 'react';
 import { init } from './data/Database';
-import * as SplashScreen from "expo-splash-screen";
-import shadeColor from './utils/Utils' 
+import * as SplashScreen from "expo-splash-screen"; 
 import TaskOptionsContextProvider from './context/task-options-context';
 import AddNoteScreen from './screens/AddNoteScreen';
+import TaskDetailScreen from './screens/TaskDetailScreen';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -53,9 +53,12 @@ export default function App() {
             <Stack.Screen name={Route.LoginScreen} component={LoginScreen} />
             <Stack.Screen name={Route.HomeScreen} component={MainScreen} />
             <Stack.Screen name={Route.GroupDetailScreen} component={GroupDetailScreen} />
+            <Stack.Screen name={Route.TaskDetailScreen} component={TaskDetailScreen} />
+            
             <Stack.Screen name={Route.AddNote} component={AddNoteScreen} options={
               {
-                presentation: 'modal'
+                presentation: 'modal',
+                title: "Add Note"
               }
             } />
             <Stack.Screen name={Route.MapScreen} component={LocationPickerScreen} options={

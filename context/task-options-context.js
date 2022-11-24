@@ -3,6 +3,9 @@ import { TaskOptions } from "../data/StaticDataSource"
 import TaskOptionModel from "../models/TaskOptionModel";
 export const TaskOptionsContext = createContext({
     hasState: false,
+    note: "",
+    location: {},
+    setState: (b) => { },
     options: [],
     update: (id, data, label) => { },
     clear: (id) => { },
@@ -38,16 +41,20 @@ function TaskOptionsContextProvider({ children }) {
     const [currentState, setCurrentState] = useState(false);
 
     function clear(id) {
-        setCurrentState(false)
         dispatch({ type: 'CLEAR', id: id })
     }
 
     function update(id, data, label) {
-        setCurrentState(true)
         dispatch({ type: 'UPDATE', id: id, data: data, label: label })
     }
+
     function reset() {
+        setCurrentState(false)
         dispatch({ type: 'RESET' })
+    }
+
+    function setState(b) {
+        setCurrentState(b)
     }
 
     const value = {
@@ -55,7 +62,10 @@ function TaskOptionsContextProvider({ children }) {
         update: update,
         options: optionsState,
         hasState: currentState,
-        reset: reset
+        reset: reset,
+        setState: setState,
+        note: optionsState[3].data.note,
+        location: optionsState[0].data,
     }
 
     return <TaskOptionsContext.Provider value={value}>

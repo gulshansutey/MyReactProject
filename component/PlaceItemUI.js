@@ -1,21 +1,21 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { useContext, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
 import { View, StyleSheet, Image, Text, Pressable } from "react-native";
 import { TaskOptionsContext } from "../context/task-options-context";
 
 function PlaceItemUI({ data }) {
-    const navigation = useNavigation()
-    const taskCtx = useContext(TaskOptionsContext)
+    const navigation = useNavigation();
+    const optionCtx = useContext(TaskOptionsContext)
     const img = data.image.prefix + "120" + data.image.suffix
     const pic = data.picture.prefix + "1200x800" + data.picture.suffix
 
-    function select() {
-        taskCtx.update("1", data, data.title);
+    function onPlaceSelected() {
+        optionCtx.update("1", data, data.title);
         navigation.goBack();
     }
 
     return <View style={styles.shadow}>
-        <Pressable onPress={select}>
+        <Pressable onPress={onPlaceSelected}>
             <View style={styles.container}>
 
                 <Image
