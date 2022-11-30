@@ -33,6 +33,7 @@ function PlaceItemUI({ data }) {
 
             </View>
         </Pressable>
+
     </View>
 }
 
@@ -46,13 +47,14 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: "#ffffff",
         shadowColor: "black",
-        shadowOffset: { width: 0, height: 4 },
+        shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.3,
-        overflow: false
+        elevation: 4,
+        overflow: Platform.OS === 'ios' ? false : "hidden"
     },
     container: {
         borderRadius: 10,
-        overflow: true
+        overflow: Platform.OS === 'ios' ? true : "visible"
     },
     title: {
         fontSize: 16,

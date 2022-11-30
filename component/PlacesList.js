@@ -1,8 +1,9 @@
 import { useCallback } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, Text } from "react-native";
 import PlaceItemUI from "../component/PlaceItemUI";
 
 function renderUI(item) {
+    
     return <PlaceItemUI data={item.item} />
 }
 
@@ -23,7 +24,7 @@ function PlacesList({ style, data, onItemSnap, onItemSelected }) {
             onViewableItemsChanged={handleVieweableItemsChanged}
             showsHorizontalScrollIndicator={false}
             key={(item) => {
-                console.log(item);
+                //console.log(item);
             }}
             renderItem={renderUI}
         />

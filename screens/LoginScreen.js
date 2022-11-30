@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
-
+import Route from '../constants/navigation'
 import AppButton from "../component/AppButton"
 import Colors from '../constants/colors';
 
@@ -30,7 +30,7 @@ function LoginScreen({ navigation }) {
         invalidatePassword();
         navigation.reset({
             index: 0,
-            routes: [{ name: 'home' }]
+            routes: [{ name: Route.HomeScreen }]
         });
     }
 
