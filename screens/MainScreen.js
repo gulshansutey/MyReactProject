@@ -40,7 +40,7 @@ function MainScreen({ navigation }) {
     );
 
     function addNote() {
-        clearDatabase();
+       //clearDatabase();
         if (Platform.OS === 'android') {
             ToastAndroid.show("Add note", ToastAndroid.SHORT)
         } else {

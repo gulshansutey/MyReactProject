@@ -11,7 +11,7 @@ function LocationPickerScreen() {
     const [location, setLocation] = useState();
     const [marker, setMarker] = useState();
     const [isLoading, setLoaded] = useState(true);
-    const [places, setPlaces] = useState();
+    const [places, setPlaces] = useState([]);
     const mapRef = useRef(null)
 
     useEffect(() => {
@@ -36,7 +36,9 @@ function LocationPickerScreen() {
     useEffect(() => {
         (async () => {
             if (!isLoading) {
+                console.log("loaded ");
                 const response = await getVenues(location.lat.toString() + "," + location.lng.toString())
+                console.log(response.length);
                 setPlaces(response);
             }
         })().catch(
@@ -57,7 +59,7 @@ function LocationPickerScreen() {
                 duration: 3000
             })
         }
-    }, [marker])
+    }, [marker]) 
 
     function onMapTouch(event) {
         const lat = event.nativeEvent.coordinate.latitude;

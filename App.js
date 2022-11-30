@@ -9,7 +9,7 @@ import LocationPickerScreen from './screens/LocationPickerScreen';
 import Route from './constants/navigation'
 import { useCallback, useEffect, useState } from 'react';
 import { init } from './data/Database';
-import * as SplashScreen from "expo-splash-screen"; 
+import * as SplashScreen from "expo-splash-screen";
 import TaskOptionsContextProvider from './context/task-options-context';
 import AddNoteScreen from './screens/AddNoteScreen';
 import TaskDetailScreen from './screens/TaskDetailScreen';
@@ -49,12 +49,14 @@ export default function App() {
       <StatusBar />
       <TaskOptionsContextProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName={Route.HomeScreen} >
-            <Stack.Screen name={Route.LoginScreen} component={LoginScreen} />
+          <Stack.Navigator initialRouteName={Route.LoginScreen} >
+            <Stack.Screen name={Route.LoginScreen} component={LoginScreen} options={{
+              headerShown: false
+            }} />
             <Stack.Screen name={Route.HomeScreen} component={MainScreen} />
             <Stack.Screen name={Route.GroupDetailScreen} component={GroupDetailScreen} />
             <Stack.Screen name={Route.TaskDetailScreen} component={TaskDetailScreen} />
-            
+
             <Stack.Screen name={Route.AddNote} component={AddNoteScreen} options={
               {
                 presentation: 'modal',
