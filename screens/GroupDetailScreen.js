@@ -13,8 +13,7 @@ function GroupDetailScreen({ route, navigation }) {
 
     const optionCtx = useContext(TaskOptionsContext);
 
-    const [todos, setTodods] = useState()
-    const [addTaskShowing, setAddTaskShowing] = useState(false)
+    const [todos, setTodods] = useState() 
     const grp = route.params.data
     const bg = shadeColor(0.80, grp.color)
     const btnBg = shadeColor(0.70, grp.color, "#ffffff")
@@ -30,11 +29,14 @@ function GroupDetailScreen({ route, navigation }) {
     }, [])
 
     useFocusEffect(
-        useCallback(() => { 
-            if (optionCtx.hasState) {
-                setAddTaskShowing(true);
-            }
+        useCallback(() => {
+            setTimeout(() => {
+                if (optionCtx.hasState) {
+                    optionCtx.showAddTaskPrompt(true)
+                }
+            }, 100);
             return () => {
+                 clearTimeout();
                 //no-op
             };
         }, [optionCtx.hasState])
@@ -47,7 +49,7 @@ function GroupDetailScreen({ route, navigation }) {
                 backgroundColor: bg,
             },
             headerTintColor: tint,
-        });
+        }); 
     });
 
 
@@ -59,20 +61,19 @@ function GroupDetailScreen({ route, navigation }) {
     }
 
     function onOpen() { 
-        setAddTaskShowing(true);
+        optionCtx.showAddTaskPrompt(true) 
     }
 
     function onClose() {
-        console.log("kjhgfdsfghj");
         optionCtx.reset()
-        setAddTaskShowing(false);
+        optionCtx.showAddTaskPrompt(false) 
     }
 
-    function addTask(todo) { 
-        todo.grpId = grp.id
-        setAddTaskShowing(false);
+    function addTask(todo) {
+        todo.grpId = grp.id 
         insertTodo(todo)
         loadTodos()
+        onClose()
     }
 
     function onOptionClick(item) {
@@ -85,13 +86,13 @@ function GroupDetailScreen({ route, navigation }) {
             return;
         }
         optionCtx.setState(true);
-        setAddTaskShowing(false);
+        optionCtx.showAddTaskPrompt(false)
     }
 
     return <View style={[styles.container, { backgroundColor: bg }]}>
         <TaskInputUI
             onClose={onClose}
-            isVisible={addTaskShowing}
+            isVisible={optionCtx.addTaskPromptShowing}
             tint={tint}
             onAddTask={addTask}
             onAttachClick={onOptionClick}

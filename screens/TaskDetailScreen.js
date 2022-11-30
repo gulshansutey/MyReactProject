@@ -7,10 +7,10 @@ import PlaceMapUI from "../component/PlaceMapUI";
 
 function TaskDetailScreen({ route, navigation }) {
 
-    const bg = route.params.bg 
+    const bg = route.params.bg
     const tint = route.params.tint
     const data = route.params.data
-    const location = JSON.parse(data.location); 
+    const location = JSON.parse(data.location);
     const [isComplete, setComplete] = useState(data.isComplete === 1)
     const [isFavorite, setFavorite] = useState(data.isFavorite === 1)
 
@@ -60,7 +60,7 @@ function TaskDetailScreen({ route, navigation }) {
                     color={tint} />
             </Pressable>
         </View>
-        <View style={styles.label}>
+        {location.title && <View style={styles.label}>
             <MaterialIcons
                 style={styles.icon}
                 name={"place"}
@@ -74,14 +74,15 @@ function TaskDetailScreen({ route, navigation }) {
                     size={18}
                     color={tint} />
             </Pressable>
-        </View>
 
-        <View style={styles.mapView}>
+        </View>}
+
+        {location.coords && <View style={styles.mapView}>
             <PlaceMapUI
                 location={{ lat: location.coords.latitude, lng: location.coords.longitude }}
                 marker={{ lat: location.coords.latitude, lng: location.coords.longitude }}
             />
-        </View>
+        </View>}
         <Text style={styles.bottomLabel}>{"Created " + longToDate(data.date)}</Text>
     </View>
 }
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     mapView: {
         width: "100%",
         height: "50%",
-        backgroundColor:"#ffffff"
+        backgroundColor: "#ffffff"
     },
     container: {
         flex: 1,

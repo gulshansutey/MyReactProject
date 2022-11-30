@@ -9,7 +9,7 @@ function AddNoteScreen({ navigation }) {
     function onAddTaskHandle() {
         optionCtx.update("4", { note: inputString }, "Note");
         optionCtx.setState(true);
-        navigation.goBack();
+        navigation.goBack(null);
     }
 
     useLayoutEffect(() => {
