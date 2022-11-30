@@ -3,9 +3,11 @@ import { TaskOptions } from "../data/StaticDataSource"
 import TaskOptionModel from "../models/TaskOptionModel";
 export const TaskOptionsContext = createContext({
     hasState: false,
+    addTaskPromptShowing: false,
     note: "",
     location: {},
     setState: (b) => { },
+    showAddTaskPrompt: (b) => { },
     options: [],
     update: (id, data, label) => { },
     clear: (id) => { },
@@ -39,6 +41,7 @@ function optionReducer(state, action) {
 function TaskOptionsContextProvider({ children }) {
     const [optionsState, dispatch] = useReducer(optionReducer, TaskOptions);
     const [currentState, setCurrentState] = useState(false);
+    const [promptShowing, setPromptShowing] = useState(false);
 
     function clear(id) {
         dispatch({ type: 'CLEAR', id: id })
@@ -57,13 +60,19 @@ function TaskOptionsContextProvider({ children }) {
         setCurrentState(b)
     }
 
+    function showAddTaskPrompt(b){
+        setPromptShowing(b)
+    }
+
     const value = {
         clear: clear,
         update: update,
         options: optionsState,
         hasState: currentState,
+        addTaskPromptShowing: promptShowing,
         reset: reset,
         setState: setState,
+        showAddTaskPrompt: showAddTaskPrompt,
         note: optionsState[3].data.note,
         location: optionsState[0].data,
     }

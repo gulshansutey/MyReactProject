@@ -1,6 +1,6 @@
 import { View, StyleSheet, Modal, Text, KeyboardAvoidingView, TouchableOpacity, Animated, TextInput, Pressable, FlatList } from 'react-native'
-import { MaterialIcons, AntDesign } from '@expo/vector-icons';
-import { useContext, useState } from 'react';
+import { MaterialIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { TaskOptionsContext } from '../context/task-options-context';
 import Todo from '../models/TodoModel';
 
@@ -9,7 +9,7 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, optio
     const optionsCtx = useContext(TaskOptionsContext);
     const [input, setInput] = useState("")
 
-    function onAddTaskHandle() { 
+    function onAddTaskHandle() {
         onAddTask(new Todo(
             "",
             "",
@@ -96,6 +96,13 @@ function TaskInputUI({ isVisible, onClose, tint, onAddTask, onAttachClick, optio
                                 onChangeText={(text) => setInput(text)}
                                 placeholderTextColor="#605d5d"
                                 placeholder="Write a task..." />
+                            <Pressable onPress={() => { if (input) { onAddTaskHandle() } }}>
+                                <MaterialCommunityIcons
+                                    style={styles.icon}
+                                    name="arrow-up-box"
+                                    size={28}
+                                    color={(input) ? tint : "#605d5d"} />
+                            </Pressable>
 
                         </View>
                         <View style={styles.actionButtons}>

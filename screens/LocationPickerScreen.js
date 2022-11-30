@@ -30,7 +30,7 @@ function LocationPickerScreen() {
                 setLoaded(false);
                 return false;
             }
-        })();
+        })().catch((e)=>{console.log(e);});
     }, [])
 
     useEffect(() => {
